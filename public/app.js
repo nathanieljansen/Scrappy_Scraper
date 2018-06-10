@@ -1,29 +1,28 @@
-request("http://www.theawesomer.com", (error, response, html) => {
+$(document).ready(function () {
 
-  // Load the HTML into cheerio and save it to a variable
-  // '$' becomes a shorthand for cheerio's selector commands, much like jQuery's '$'
-  var $ = cheerio.load(html);
-
-  // An empty array to save the data that we'll scrape
-  var results = [];
-
-  // Select each element in the HTML body from which you want information.
-  // NOTE: Cheerio selectors function similarly to jQuery's selectors,
-  // but be sure to visit the package's npm page to see how it works
-  $("img.pix").each(function (i, element) {
-
-    var link = $(element).parent().attr("href");
-
-    var image = $(element).attr("src")
-
-    results.push({
-      link: link,
-      image: image
+  $('.scrapButton').on('click', () => {
+    console.log("pushed")
+    $.getJSON("/scrape", function (data) {
+      // Call our function to generate a table body
+      displayResults(data);
     });
 
-    // Save these results in an object that we'll push into the results array we defined earlier
-  });
+  })
 
-  // Log the results once you've looped through each of the elements found with cheerio
-  console.log(results);
-});
+  function displayResults(data) {
+    // console.log(data)
+    data.forEach(data => {
+      let row = `
+    <tr>
+      <td>${data.title}</td>
+      <td><img src = "${data.image}"></td>
+      <td>${data.description}</td>
+      <td><a href ="${data.link}">Link</a></td>
+      
+    </tr>
+    `
+      console.log(row);
+      $('tbody').append(row);
+    });
+  }
+})

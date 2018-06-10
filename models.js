@@ -23,5 +23,6 @@ const Notes = mongoose.model('Notes', notesSchema, 'notes');
 
 module.exports ={
   Articles,
-  Notes
+  Notes,
+  Images
 }
