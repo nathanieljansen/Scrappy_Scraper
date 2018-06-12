@@ -1,6 +1,12 @@
 $(document).ready(function () {
 
+  $.getJSON("/scrape", function (data) {
+    // Call our function to generate a table body
+    displayResults(data);
+  });
+
   $('.scrapeButton').on('click', () => {
+
     console.log("pushed")
     $.getJSON("/scrape", function (data) {
       // Call our function to generate a table body
@@ -10,13 +16,8 @@ $(document).ready(function () {
   })
 
   function displayResults(data) {
-
     // console.log(data)
     data.forEach(data => {
-      var i = 1
-      // let header = `
-      //   <h1>${data.title}</h1>
-      // `
 
       let imageDescription = `<div> <h1>${data.title}</h1> <div class="row">
       <div class="col-md-4 text-center"> 
