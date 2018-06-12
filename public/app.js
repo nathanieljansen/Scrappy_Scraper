@@ -10,13 +10,15 @@ $(document).ready(function () {
   })
 
   function displayResults(data) {
+
     // console.log(data)
     data.forEach(data => {
-      let header = `
-        <h1>${data.title}</h1>
-      `
+      var i = 1
+      // let header = `
+      //   <h1>${data.title}</h1>
+      // `
 
-      let imageDescription = `<div class="row"> 
+      let imageDescription = `<div> <h1>${data.title}</h1> <div class="row">
       <div class="col-md-4 text-center"> 
       <img src = "${data.image}"</img>
       </div>
@@ -28,42 +30,25 @@ $(document).ready(function () {
       <button type="button" class="col-md-12 btn btn-primary noteButton">Make Notes</button></div>
       </div>
       </div>
+      </div>
       `
-      $(".header").append(header)
+      // $(".header").append(header)
       $(".header").append(imageDescription)
-
-      let description = ``
-
-      // $(".header").append(description)
-
-
-      //   let row = `
-      // <tr>
-      //   <td>${data.title}</td>
-      //   <td><img src = "${data.image}"></td>
-      //   <td>${data.description}</td>
-      //   <td><a target="_blank" href ="${data.link}">Link</a></td>
-
-      // </tr>
-      // `
-      //   console.log(row);
-      //   $('tbody').append(row);
     });
 
-     $(document).on('click', '.saveButton', function () {
-    
-       $.ajax({
-         method: "POST",
-         url: "./savedarticles",
-         data: this(data)
-       }).then((responseFromBackEnd) => {
-         console.log('Quit it!!', responseFromBackEnd)
-       });
+    // $(document).on('click', '.saveButton', function () {
+    //   const savedArticles = imageDescription
+    //   $.ajax({
+    //     method: "POST",
+    //     url: "./savedarticles",
+    //     data: savedArticles
+    //   }).then((savedArticles) => {
+    //     console.log('Quit it!!', savedArticles)
+    //   });
 
-       console.log(JSON.stringify(pairingRecord) + "hi")
-     })
+    //   console.log(JSON.stringify(responseFromBackEnd) + "hi")
+    // })
   }
 
- 
-})
 
+})
