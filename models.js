@@ -1,4 +1,4 @@
-const mongoose = requre("mongoose")
+const mongoose = require("mongoose")
 
 const Schema = mongoose.Schema;
 
@@ -6,6 +6,7 @@ const articlesSchema = new Schema({
   title: String,
   articleURL: String,
   imageURL: String,
+  description: String,
   notes: [{
     type: Schema.Types.ObjectId,
     ref: "Notes"
@@ -23,6 +24,5 @@ const Notes = mongoose.model('Notes', notesSchema, 'notes');
 
 module.exports ={
   Articles,
-  Notes,
-  Images
+  Notes
 }
