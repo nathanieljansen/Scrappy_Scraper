@@ -66,9 +66,19 @@ app.get('/scrape', function (req, res) {
           return res.json(err);
         });
     });
+  });
 
-    // Log the results once you've looped through each of the elements found with cheerio
-    
+  app.get("/articles", function (req, res) {
+    db.Articles.find({})
+      .then(function (dbArticle) {
+        // If all Notes are successfully found, send them back to the client
+        res.json(dbArticle);
+      })
+      .catch(function (err) {
+        // If an error occurs, send the error back to the client
+        res.json(err);
+      });
+    // TODO: Finish the route so it grabs all of the articles
   });
   
 

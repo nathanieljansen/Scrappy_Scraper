@@ -1,5 +1,10 @@
 $(document).ready(function () {
 
+   $.getJSON("/articles", function (data) {
+     // Call our function to generate a table body
+     displayResults(data);
+   });
+
   // $.getJSON("/scrape", function (data) {
   //   // Call our function to generate a table body
   //   displayResults(data);
@@ -30,7 +35,7 @@ $(document).ready(function () {
         <div class="col-md-2 text-center link">
           <a target="_blank" href ="${data.articleURL}">Link</a>
           <div class="row">
-            <button type="button" data-title=${data._id} data-image=${data.image} data-words="'${data.description}"' data-link=${data.link}
+            <button type="button" data-id=${data._id}
               class="col-md-12 btn btn-primary saveButton" 
               >Save Article</button>
           </div>
@@ -45,17 +50,14 @@ $(document).ready(function () {
 
     $(document).on('click', '.saveButton', function () {
       const articleInfo= {
-        title: $(this).attr('data-title'),
-        image: $(this).attr('data-image'),
-        description: $(this).attr('data-words'),
-        link: $(this).attr('data-link')
+        savedArticles: $(this).attr('data-id')
       }
       console.log(articleInfo)
-      // db.post("/saveArticles", function (req, res) {
-      //  console.log("No")
-      // }).then((savedArticles) => {
-      //   console.log('Quit it!!', savedArticles)
-      // });
+      db.post("/saveArticles", function (req, res) {
+       console.log("No")
+      }).then((savedArticles) => {
+        console.log('Quit it!!', savedArticles)
+      });
     })
   }
 
