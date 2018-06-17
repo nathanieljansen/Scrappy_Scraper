@@ -3,7 +3,12 @@ const mongoose = require("mongoose")
 const Schema = mongoose.Schema;
 
 const articlesSchema = new Schema({
-  title: String,
+  title: {
+     index: true,
+      type: String,
+      unique: true,
+      dropDups: true
+  },
   articleURL: String,
   imageURL: String,
   description: String,

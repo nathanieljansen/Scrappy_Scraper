@@ -12,9 +12,9 @@ var axios = require("axios");
 
 
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/awesomeHeadlines";
+const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI);
+
 
 const port = process.env.PORT || 3000
 
@@ -22,14 +22,15 @@ app.use(express.static("public"));
 
 
 app.get("/", function (req, res) {
-  res.send(index.html);
+  
 });
 
-// app.get('/savedArcticles', function (){
-//   res.json({});
-// })
+app.get('/arcticles', function (){
+  res.json({});
+})
 
 app.get('/scrape', function (req, res) {
+ 
   axios.get("http://www.theawesomer.com").then(function (response) {
 
     // request("http://www.theawesomer.com", (error, response, html) => {
@@ -39,7 +40,7 @@ app.get('/scrape', function (req, res) {
     var $ = cheerio.load(response.data);
 
     // An empty array to save the data that we'll scrape
-    var results = [];
+
 
     // Select each element in the HTML body from which you want information.
     // NOTE: Cheerio selectors function similarly to jQuery's selectors,
@@ -86,7 +87,7 @@ app.get('/scrape', function (req, res) {
 
 
 app.listen(port, function () {
-
+mongoose.connect(MONGODB_URI);
   console.log("App running on port 3000!");
 });
 

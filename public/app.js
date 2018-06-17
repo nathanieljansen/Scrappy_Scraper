@@ -1,9 +1,10 @@
 $(document).ready(function () {
 
-   $.getJSON("/articles", function (data) {
-     // Call our function to generate a table body
-     displayResults(data);
-   });
+
+  $.getJSON("/articles", function (data) {
+    // Call our function to generate a table body
+    displayResults(data);
+  });
 
   // $.getJSON("/scrape", function (data) {
   //   // Call our function to generate a table body
@@ -11,21 +12,20 @@ $(document).ready(function () {
   // });
 
   $('.scrapeButton').on('click', () => {
+    $(".header").empty()
 
     console.log("pushed it real good")
-  
+
     $.getJSON("/scrape", function (data) {
       // Call our function to generate a table body
       displayResults(data);
     });
-
+    window.location.reload(true)
   })
 
   function displayResults(data) {
-    // console.log(data)
-    
     data.forEach(data => {
-      let imageDescription = `
+      let scrapeInfo = `
       <div> 
         <h1>${data.title}</h1> <div class="row">
         <div class="col-md-4 text-center"> 
@@ -40,27 +40,27 @@ $(document).ready(function () {
               >Save Article</button>
           </div>
           <div class="row">
-        <button type="button" class="col-md-12 btn btn-primary noteButton">Make Notes</button></div>
+        <button type="button" class="col-md-12 btn btn-primary noteButton" data-id=${data._id}>Make Notes</button></div>
         </div>
         </div>
       </div>
       `
-      $(".header").append(imageDescription)
+      // let results = []
+      // results.push(scrapeInfo)
+      // results = results.slice(0,4)
+      $(".header").append(scrapeInfo)
     });
 
-    $(document).on('click', '.saveButton', function () {
-      const articleInfo= {
-        savedArticles: $(this).attr('data-id')
-      }
-      console.log(articleInfo)
-      db.post("/saveArticles", function (req, res) {
-       console.log("No")
-      }).then((savedArticles) => {
-        console.log('Quit it!!', savedArticles)
-      });
-    })
+    // $(document).on('click', '.saveButton', function () {
+    //   const savedArticles = {
+    //     savedArticle: $(this).attr('data-id')
+    //   }
+    //   console.log(savedArticles)
+    //   $.ajax({
+    //     method: "POST",
+    //     url: "/savedArticles",
+    //     data: savedArticles
+    //   })
+    // })
   }
-
-
 })
-
