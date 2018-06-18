@@ -10,9 +10,18 @@ const db = require("./models")
 const app = express();
 var axios = require("axios");
 
+app.set('view engine', 'html');
+
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+
 
 
 const MONGODB_URI = process.env.MONGODB_URI;
+
+
 
 
 
@@ -20,17 +29,11 @@ const port = process.env.PORT || 3000
 
 app.use(express.static("public"));
 
+mongoose.connect(MONGODB_URI);
 
-app.get("/", function (req, res) {
-  
-});
-
-app.get('/arcticles', function (){
-  res.json({});
-})
 
 app.get('/scrape', function (req, res) {
- 
+
   axios.get("http://www.theawesomer.com").then(function (response) {
 
     // request("http://www.theawesomer.com", (error, response, html) => {
@@ -64,31 +67,67 @@ app.get('/scrape', function (req, res) {
         })
         .catch(function (err) {
           // If an error occurred, send it to the client
-          return res.json(err);
+          // return res.json(err);
         });
     });
   });
 
-  app.get("/articles", function (req, res) {
-    db.Articles.find({})
-      .then(function (dbArticle) {
-        // If all Notes are successfully found, send them back to the client
-        res.json(dbArticle);
-      })
-      .catch(function (err) {
-        // If an error occurs, send the error back to the client
-        res.json(err);
-      });
-    // TODO: Finish the route so it grabs all of the articles
-  });
-  
 
 })
 
+app.get("/articles", function (req, res) {
+  db.Articles.find({})
+    .then(function (dbArticle) {
+      // If all Notes are successfully found, send them back to the client
+      res.json(dbArticle);
+    })
+    .catch(function (err) {
+      // If an error occurs, send the error back to the client
+      res.json(err);
+    });
+  // TODO: Finish the route so it grabs all of the articles
+});
+
+app.get('/saved', function (req, res) {
+  res.sendFile(__dirname + '/public/saved.html');
+});
+
+app.get("/savedArticles", function (req, res) {
+  db.Articles.find({
+      saved: true
+    })
+    .sort({
+      date: -1
+    })
+    .then(function (dbArticle) {
+      // If all Notes are successfully found, send them back to the client
+      res.json(dbArticle);
+    })
+    .catch(function (err) {
+      // If an error occurs, send the error back to the client
+      res.json(err);
+    });
+  // TODO: Finish the route so it grabs all of the articles
+});
+
+
+app.post("/savedArticles/:id", function (req, res) {
+  db.Articles.findByIdAndUpdate(req.params.id, {
+      $set: {
+        saved: true
+      }
+    })
+    .exec(function (err, data) {
+      if (err) throw err;
+      res.end();
+    });
+});
 
 app.listen(port, function () {
-mongoose.connect(MONGODB_URI);
+
   console.log("App running on port 3000!");
 });
+
+
 
 exports = module.exports = app;

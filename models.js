@@ -12,6 +12,10 @@ const articlesSchema = new Schema({
   articleURL: String,
   imageURL: String,
   description: String,
+  saved: {
+    type: Boolean,
+    default: false
+  },
   notes: [{
     type: Schema.Types.ObjectId,
     ref: "Notes"
