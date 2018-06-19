@@ -96,9 +96,6 @@ app.get("/savedArticles", function (req, res) {
   db.Articles.find({
       saved: true
     })
-    .sort({
-      date: -1
-    })
     .then(function (dbArticle) {
       // If all Notes are successfully found, send them back to the client
       res.json(dbArticle);
@@ -121,6 +118,87 @@ app.post("/savedArticles/:id", function (req, res) {
       if (err) throw err;
       res.end();
     });
+});
+
+app.post("/deletedArticles/:id", function (req, res) {
+  db.Articles.findByIdAndUpdate(req.params.id, {
+      $set: {
+        saved: false
+      }
+    })
+    .exec(function (err, data) {
+      if (err) throw err;
+      res.end();
+    });
+});
+
+
+app.get("/articleNote/:id", function (req, res) {
+  // TODO
+  // ====
+  // Finish the route so it finds one article using the req.params.id,
+  // and run the populate method with "note",
+  // then responds with the article with the note included
+
+  db.Article.findOne({
+      _id: req.params.id
+    })
+    .populate("Note")
+    .then(function (dbArticle) {
+      // If all Notes are successfully found, send them back to the client
+      res.json(dbArticle);
+    })
+    .catch(function (err) {
+      // If an error occurs, send the error back to the client
+      res.json(err);
+    });
+
+
+});
+
+// Route for saving/updating an Article's associated Note
+app.post("/articleNotes/:id", function (req, res) {
+  // TODO
+  // ====
+  // save the new note that gets posted to the Notes collection
+  // then find an article from the req.params.id
+  // and update it's "note" property with the _id of the new note
+db.Articles.create(req.body)
+    .then(function (dbNote) {
+      // If a Note was created successfully, find one Article (there's only one) and push the new Note's _id to the User's `notes` array
+      // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+      // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+      return db.Articles.findOneAndUpdate({
+        _id: req.params.id
+      }, {
+        $push: {
+          notes: dbNote._id
+        }
+      }, {
+        new: true
+      });
+    })
+    .then(function (dbArticle) {
+      // If the Article was updated successfully, send it back to the client
+      res.json(dbArticle);
+    })
+    .catch(function (err) {
+      // If an error occurs, send it back to the client
+      res.json(err);
+    });
+});
+
+app.get("/articleNotes", function (req, res) {
+  db.Notes.find({})
+    .then(function (dbArticle) {
+      // If all Notes are successfully found, send them back to the client
+      res.json(dbArticle);
+    })
+    .catch(function (err) {
+      // If an error occurs, send the error back to the client
+      res.json(err);
+    });
+  // TODO: Finish the route so it grabs all of the articles
 });
 
 app.listen(port, function () {
